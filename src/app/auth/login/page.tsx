@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function LogIn() {
   const router = useRouter();
@@ -18,8 +19,10 @@ export default function LogIn() {
     if (!res.ok) {
       const error = await res.json();
       console.log("Error:", error.message);
+      toast.error("Invalid credentials");
     }
     if (res.status === 201) {
+      toast.success("Login Successfull");
       router.push("/gadgets");
     }
   };
@@ -65,6 +68,7 @@ export default function LogIn() {
           Submit
         </button>
       </div>
+      <ToastContainer />
     </div>
   );
 }

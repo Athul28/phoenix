@@ -1,16 +1,19 @@
 "use client";
 import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export default function SignUp() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async () => {
     event?.preventDefault();
     try {
       console.log("Details", { username, email, password });
-      const res = await fetch("/api/auth/signup", {
+      await fetch("/api/auth/signup", {
         method: "POST",
         body: JSON.stringify({
           username: username,
@@ -21,7 +24,8 @@ export default function SignUp() {
           "Content-Type": "application/json",
         },
       });
-      alert("New account created!!!");
+      toast.success("New account created, please login to continue!");
+      router.push("/auth/login");
     } catch (err) {
       alert("An unexpected error occurred");
       console.error(err);
@@ -83,6 +87,7 @@ export default function SignUp() {
           Submit
         </button>
       </div>
+      <ToastContainer />
     </div>
   );
 }

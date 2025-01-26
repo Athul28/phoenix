@@ -1,14 +1,13 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { faker } from "@faker-js/faker";
 import jwt from "jsonwebtoken";
 
-const prisma = new PrismaClient();
 
 interface DecodedToken {
   id?: string;
   email?: string;
   exp?: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 const isValidToken = (token: string): boolean => {
@@ -45,12 +44,16 @@ export async function GET(req: Request) {
   }
 
   const gadgets = await prisma.gadget.findMany();
-  return new Response(JSON.stringify(gadgets));
+  const gadgetsWithProbability = gadgets.map(gadget => ({
+    ...gadget,
+    missionSuccessProbability: `${gadget.name} - ${faker.number.int({ min: 50, max: 100 })}% success probability`
+  }));
+  return new Response(JSON.stringify(gadgetsWithProbability));
 }
 
-export async function POST(req: Request) {
+export async function POST() {
   const name = faker.word.noun();
-  const res = await prisma.gadget.create({
+  await prisma.gadget.create({
     data: {
       name: name,
     },
@@ -65,7 +68,7 @@ export async function DELETE(req: Request) {
       status: 400,
     });
   }
-  const res = await prisma.gadget.delete({
+  await prisma.gadget.delete({
     where: {
       id: body.id,
     },
@@ -83,7 +86,7 @@ export async function PATCH(req: Request) {
       }
     );
   }
-  const res = await prisma.gadget.update({
+  await prisma.gadget.update({
     where: { id: body.id },
     data: {
       name: body.name,
