@@ -71,7 +71,7 @@ export default function Gadgets() {
   }, []);
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="flex flex-col items-center p-10 min-h-screen bg-gradient-to-r from-indigo-900 via-purple-900 to-gray-900">
       <h1 className="text-2xl font-bold mb-4">Gadgets</h1>
       <button
         className="bg-green-500 text-white px-2 py-1 rounded mb-5"
